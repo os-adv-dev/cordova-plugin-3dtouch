@@ -49,8 +49,12 @@
 }
 
 - (void) configureQuickActions:(CDVInvokedUrlCommand *)command {
-    NSDictionary *actions = [command.arguments objectAtIndex:0];
-    
+    NSError *jsonError;
+    NSData *objectData = [[command.arguments objectAtIndex:0] dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *actions = [NSJSONSerialization JSONObjectWithData:objectData
+                                                         options:NSJSONReadingMutableContainers
+                                                           error:&jsonError];
+
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     for (NSDictionary *action in actions) {
