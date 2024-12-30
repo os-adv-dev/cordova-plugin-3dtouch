@@ -13,8 +13,17 @@
     
     bool avail = NO;
     
-    if (IsAtLeastiOSVersion(@"9")) {
-        avail = [self.viewController.traitCollection forceTouchCapability] == UIForceTouchCapabilityAvailable;
+    if (@available(iOS 13.0, *)) {
+        if (self.viewController.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable) {
+            // 3D Touch is available
+            avail = YES;
+        } else {
+            // Assume Haptic Touch is available on devices running iOS 13 or later
+            avail = YES;
+        }
+    } else {
+        // Only check for 3D Touch on earlier versions of iOS
+        avail = self.viewController.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable;
     }
     
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:avail];
